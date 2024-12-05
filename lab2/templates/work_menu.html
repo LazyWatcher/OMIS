@@ -1,0 +1,261 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Список Полей
+{% endblock %}
+
+{% block style %}
+  body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #1c3b2f;
+    font-family: Arial, sans-serif;
+    color: #ffffff;
+  }
+  .back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 24px;
+    color: #ffffff;
+    background-color: #244d3a;
+    padding: 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .back-button:hover {
+    background-color: #1a3d2c;
+  }
+
+  .close-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 30px;
+    height: 30px;
+    background-color: #ff4c4c;
+    color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .close-button:hover {
+    background-color: #e03a3a;
+  }
+
+  .app-window {
+    width: 620px;
+    height: auto;
+    background-color: #244d3a;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+
+
+  .title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  .field-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .field-item {
+    background-color: #123227;
+    padding: 10px 15px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #ffffff;
+  }
+
+  .field-name {
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .field-status {
+    font-size: 14px;
+    margin-right: auto;
+    padding-left: 10px;
+  }
+
+  .details-button {
+    background-color: #d1e7c0;
+    color: #244d3a;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .details-button:hover {
+    background-color: #b5d1a5;
+  }
+
+  .wait-controls {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .wait-controls label {
+    font-size: 16px;
+  }
+
+  .wait-controls input {
+    width: 60px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+  }
+
+  .wait-controls button {
+    padding: 5px 15px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .wait-controls button:hover {
+    background-color: #45a049;
+  }
+
+  .fields-container {
+    max-height: 500px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-top: 20px;
+    background-color: #d1e7c0;
+  }
+
+  .field-item {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #244d3a; /* темный фон */
+    color: #ffffff; /* белый цвет текста */
+  }
+
+  .field-item:hover {
+    background-color: #1a3d2c; /* немного темнее для hover эффекта */
+  }
+  .advice-button {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+  }
+{% endblock %}
+
+{% block body %}
+<div class="app-window">
+  <!-- Кнопка Назад -->
+  <a href="/" class="back-button">←</a>
+
+  <!-- Кнопка Закрыть -->
+  <a href="/shutdown" class="close-button">✕</a>
+
+  <div class="title">Список Полей</div>
+
+  <!-- Кнопка Советы -->
+  <a href="{{ url_for('result_view') }}" class="advice-button">Советы</a>
+
+  <div class="fields-container">
+    {% for field in fields %}
+      <div class="field-item">
+        <span class="field-name">Поле {{ field.field_id }}</span>
+        <span class="field-status">Статус: {{ field.status }}</span>
+
+        {% if field.status != 'Пусто' %}
+          {% set plant = plant_data.get(field.plant_id) %}
+          {% set agronomist = agronomist_data.get(field.agronomist_id) %}
+          {% if plant %}
+            <span class="field-status">Растение: {{ plant.plant_name }}</span>
+          {% endif %}
+          {% if agronomist %}
+            <span class="field-status">Агроном: {{ agronomist.agronomist_name }}</span>
+          {% endif %}
+        {% endif %}
+
+        <a class="details-button" href="{{ url_for('field_info', field_id=field.field_id) }}">Подробнее</a>
+      </div>
+    {% endfor %}
+</div>
+
+  <div class="wait-controls">
+    <label for="wait-time">Введите число:</label>
+    <input type="number" id="wait-time" min="1" value="1">
+    <button id="wait-button">Ждать</button>
+  </div>
+</div>
+
+
+
+<script>
+  document.getElementById('wait-button').addEventListener('click', async function () {
+    const waitTime = document.getElementById('wait-time').value;
+
+    if (waitTime > 0) {
+      try {
+        const response = await fetch('/wait', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ wait_time: parseInt(waitTime, 10) })
+        });
+
+        if (response.ok) {
+          location.reload();
+        } else {
+          console.error('Ошибка выполнения операции');
+        }
+      } catch (error) {
+        console.error('Ошибка:', error);
+      }
+    } else {
+      alert('Введите число больше 0');
+    }
+  });
+</script>
+
+<script>
+  document.querySelector('.close-button').addEventListener('click', function() {
+    window.close();
+    fetch('/shutdown', { method: 'POST' });
+  });
+</script>
+
+{% endblock %}

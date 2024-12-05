@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Советы
+{% endblock %}
+
+{% block style %}
+  body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #1c3b2f;
+    font-family: Arial, sans-serif;
+    color: #ffffff;
+  }
+
+  .app-window {
+    width: 620px;
+    height: auto;
+    background-color: #244d3a;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+
+  .back-button {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: 30px;
+    height: 30px;
+    background-color: #ffffff;
+    color: #244d3a;
+    border-radius: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .close-button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 30px;
+    height: 30px;
+    background-color: #ff4c4c;
+    color: #ffffff;
+    border-radius: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+
+  .fields-container {
+    max-height: 500px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-top: 20px;
+    background-color: #d1e7c0;
+    width: 100%;
+  }
+
+  .field-item {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #244d3a; /* темный фон */
+    color: #ffffff; /* белый цвет текста */
+  }
+
+  .field-item:hover {
+    background-color: #1a3d2c; /* немного темнее для hover эффекта */
+  }
+
+  .field-name {
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .field-status {
+    font-size: 14px;
+    margin-right: auto;
+    padding-left: 10px;
+  }
+
+  .advice-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .advice-button:hover {
+    background-color: #45a049;
+  }
+{% endblock %}
+
+{% block body %}
+<div class="app-window">
+  <!-- Кнопка Назад -->
+  <a href="/" class="back-button">←</a>
+  <!-- Кнопка Закрыть -->
+  <a href="/shutdown" class="close-button">✕</a>
+
+  <div class="title">Советы</div>
+
+  <div class="fields-container">
+    {% for advice in sorted_advice %}
+      <div class="field-item">
+        <span class="field-name">Поле {{ advice.field_id }}</span>
+        <span class="field-status">Совет: {{ advice.advice }}</span>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  document.querySelector('.close-button').addEventListener('click', function() {
+    window.close();
+    fetch('/shutdown', { method: 'POST' });
+  });
+</script>
+
+{% endblock %}
